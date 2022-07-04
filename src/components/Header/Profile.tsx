@@ -1,0 +1,17 @@
+import { Avatar, Box, Flex, Text } from "@chakra-ui/react";
+
+export function Profile() {
+    return (
+        <Flex
+            align="center"
+        >
+            <Box mr="4" textAlign="right">
+                <Text>Mateus Pegoraro</Text>
+                <Text color="gray.300" fontSize="small">
+                    mateus.pegoraro@email.com
+                </Text>
+            </Box>
+            <Avatar size="md" name="Mateus Pegoraro" src="https://github.com/mateuspegoraro.png" />
+        </Flex>
+    )
+}
