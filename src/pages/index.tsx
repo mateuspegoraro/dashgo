@@ -1,36 +1,31 @@
 import { Button, Flex, Stack } from "@chakra-ui/react";
 import { Input } from "../components/Form/Input";
-import { SubmitHandler, useForm } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup';
+import { SubmitHandler, useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
 type SignInFormData = {
   email: string;
   password: string;
-}
-
+};
 
 const signInFormSchema = yup.object().shape({
-  email: yup.string().required('E-mail obrigatório').email('E-mail inválido'),
-  password: yup.string().required('Senha obrigatória'),
-})
+  email: yup.string().required("E-mail obrigatório").email("E-mail inválido"),
+  password: yup.string().required("Senha obrigatória"),
+});
 
 export default function SignIn() {
   const { register, handleSubmit, formState } = useForm({
-    resolver: yupResolver(signInFormSchema)
+    resolver: yupResolver(signInFormSchema),
   });
 
   // utilizamos a tipagem pois com ela temos acesso a mais parametros de submit alem do values
   const handleSignIn: SubmitHandler<SignInFormData> = async (values) => {
-    console.log(formState.errors)
-  }
+    console.log(formState.errors);
+  };
 
   return (
-    <Flex
-      h="100vh"
-      align="center"
-      justify="center"
-    >
+    <Flex h="100vh" align="center" justify="center">
       <Flex
         as="form"
         width="100%"
@@ -42,19 +37,19 @@ export default function SignIn() {
         onSubmit={handleSubmit(handleSignIn)}
       >
         <Stack spacing="4">
-          <Input 
-            name="email" 
-            label="E-mail" 
-            type="email" 
-            {...register('email')} 
+          <Input
+            name="email"
+            label="E-mail"
+            type="email"
+            {...register("email")}
             error={formState.errors.email}
           />
 
-          <Input 
-            name="password" 
-            label="Password" 
-            type="password" 
-            {...register('password')} 
+          <Input
+            name="password"
+            label="Password"
+            type="password"
+            {...register("password")}
             error={formState.errors.password}
           />
         </Stack>
@@ -68,5 +63,5 @@ export default function SignIn() {
         </Button>
       </Flex>
     </Flex>
-  )
+  );
 }
