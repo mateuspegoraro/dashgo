@@ -5,6 +5,7 @@ import {
   Flex,
   Heading,
   Icon,
+  Spinner,
   Table,
   Tbody,
   Td,
@@ -16,22 +17,23 @@ import {
 } from '@chakra-ui/react';
 import Link from 'next/link';
 import { useEffect } from 'react';
-import { RiAddLine, RiPencilLine } from 'react-icons/ri';
+import { RiAddLine } from 'react-icons/ri';
+import { useQuery } from '@tanstack/react-query';
 import { Header } from '../../components/Header';
 import { Pagination } from '../../components/Pagination';
 import { Sidebar } from '../../components/Sidebar';
 
 export default function UserList() {
+  const { data, isLoading, error } = useQuery(['users'], async () => {
+    const response = await fetch('http://localhost:3001/api/users');
+    const data = response.json();
+    return data;
+  });
+
   const isWideVersion = useBreakpointValue({
     base: false,
     lg: true,
   });
-
-  useEffect(() => {
-    fetch('http://localhost:3001/api/users')
-      .then(response => response.json())
-      .then(data => console.log(data));
-  }, []);
 
   return (
     <Box>
@@ -56,34 +58,46 @@ export default function UserList() {
               </Button>
             </Link>
           </Flex>
-          <Table colorScheme="whiteAlpha">
-            <Thead>
-              <Tr>
-                <Th px={['4', '4', '6']} color="gray.300" width="8">
-                  <Checkbox colorScheme="pink" />
-                </Th>
-                <Th>Usuário</Th>
-                {isWideVersion && <Th>Data de cadastro</Th>}
-              </Tr>
-            </Thead>
-            <Tbody>
-              <Tr>
-                <Td px={['4', '4', '6']}>
-                  <Checkbox colorScheme="pink" />
-                </Td>
-                <Td>
-                  <Box>
-                    <Text fontWeight="bold">Mateus Pegoraro</Text>
-                    <Text fontSize="sm" color="gray.300">
-                      mateus.pegoraro@email.com
-                    </Text>
-                  </Box>
-                </Td>
-                {isWideVersion && <Td>04 de Abril, 2022</Td>}
-              </Tr>
-            </Tbody>
-          </Table>
-          <Pagination />
+          {isLoading ? (
+            <Flex justify="center">
+              <Spinner></Spinner>
+            </Flex>
+          ) : !error ? (
+            <>
+              <Table colorScheme="whiteAlpha">
+                <Thead>
+                  <Tr>
+                    <Th px={['4', '4', '6']} color="gray.300" width="8">
+                      <Checkbox colorScheme="pink" />
+                    </Th>
+                    <Th>Usuário</Th>
+                    {isWideVersion && <Th>Data de cadastro</Th>}
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  <Tr>
+                    <Td px={['4', '4', '6']}>
+                      <Checkbox colorScheme="pink" />
+                    </Td>
+                    <Td>
+                      <Box>
+                        <Text fontWeight="bold">Mateus Pegoraro</Text>
+                        <Text fontSize="sm" color="gray.300">
+                          mateus.pegoraro@email.com
+                        </Text>
+                      </Box>
+                    </Td>
+                    {isWideVersion && <Td>04 de Abril, 2022</Td>}
+                  </Tr>
+                </Tbody>
+              </Table>
+              <Pagination />
+            </>
+          ) : (
+            <Flex justify="center">
+              <Text>Falha ao obter os dados</Text>
+            </Flex>
+          )}
         </Box>
       </Flex>
     </Box>
